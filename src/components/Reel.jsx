@@ -19,20 +19,24 @@ export function Reel({ isSpinning, slowMotion, finalResult, reelIndex }) {
   useEffect(() => {
     if (isSpinning) {
       // Create ordered strip with all images in sequence (no duplicates within each cycle)
+      // Calculate starting offset so finalResult appears naturally at position 22
+      const numImages = SLOT_IMAGES.length; // 10 images
+      const targetPosition = 22; // Where we want the final result to appear
+      const numRepeats = 5; // Repeat the full sequence 5 times (50 images total)
+
+      // Calculate what offset to start from so position 22 has the finalResult
+      // Without offset, position 22 would have image (22 % 10) = 2
+      // To have finalResult at position 22, we need to shift the entire sequence
+      const naturalImageAtTarget = targetPosition % numImages; // 22 % 10 = 2
+      const offset = (finalResult - naturalImageAtTarget + numImages) % numImages;
+
       const strip = [];
-      const numRepeats = 3; // Repeat the full sequence 3 times (30 images total)
-
       for (let i = 0; i < numRepeats; i++) {
-        for (let j = 0; j < SLOT_IMAGES.length; j++) {
-          strip.push(j);
+        for (let j = 0; j < numImages; j++) {
+          // Start from offset and wrap around
+          const imageIndex = (j + offset) % numImages;
+          strip.push(imageIndex);
         }
-      }
-
-      // Ensure final result appears near the end of the strip for smooth stopping
-      if (finalResult !== null && finalResult !== undefined) {
-        strip[27] = finalResult;
-        strip[28] = finalResult;
-        strip[29] = finalResult;
       }
 
       setImageStrip(strip);
@@ -48,10 +52,17 @@ export function Reel({ isSpinning, slowMotion, finalResult, reelIndex }) {
   // Stop animation and align to final result
   useEffect(() => {
     if (!isSpinning && finalResult !== null && finalResult !== undefined && stripRef.current && imageStrip.length > 0) {
-      // Calculate position to center the final result (index 27)
-      const targetIndex = 27;
-      const imageHeight = 180; // Height of each image in pixels
-      const offset = targetIndex * imageHeight;
+      // Calculate position to center the final result
+      // Reel viewport center is at 200px
+      // Each image is 180px tall, so for image to be centered, its top should be at 200 - 90 = 110px
+      // Formula: stripTop + (targetIndex * imageHeight) + translateY = targetPosition
+      const targetIndex = 22;
+      const imageHeight = 180;
+      const stripInitialTop = -3760;
+      const viewportCenter = 200;
+      const targetPosition = viewportCenter - (imageHeight / 2); // 200 - 90 = 110px
+
+      const finalTranslateY = targetPosition - stripInitialTop - (targetIndex * imageHeight);
 
       // Remove animation class and apply smooth transition to final position
       stripRef.current.classList.remove('reel-strip-spinning', 'reel-strip-slow-motion');
@@ -60,7 +71,7 @@ export function Reel({ isSpinning, slowMotion, finalResult, reelIndex }) {
       setTimeout(() => {
         if (stripRef.current) {
           stripRef.current.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
-          stripRef.current.style.transform = `translateY(-${offset}px)`;
+          stripRef.current.style.transform = `translateY(${finalTranslateY}px)`;
         }
       }, 50);
     }

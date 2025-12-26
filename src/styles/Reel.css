@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 125px;  /* Offset to center the visible window */
+  top: -3760px;  /* Start with strip positioned so image 22 is roughly centered */
   left: 10px;
   width: 180px;
   will-change: transform;
@@ -44,7 +44,7 @@
     transform: translateY(0);
   }
   to {
-    transform: translateY(1800px);  /* 10 images × 180px = one complete cycle */
+    transform: translateY(1800px);  /* Move strip DOWN - images fall from top */
   }
 }
 
@@ -53,13 +53,13 @@
     transform: translateY(0);
   }
   to {
-    transform: translateY(1800px);  /* 10 images × 180px = one complete cycle */
+    transform: translateY(1800px);  /* Move strip DOWN - images fall from top */
   }
 }
 
 /* Apply fast scroll animation */
 .reel-strip-spinning {
-  animation: scroll-down-fast 1s linear infinite;
+  animation: scroll-down-fast 1.2s linear infinite;
 }
 
 /* Apply slow-motion scroll animation (4s to match slowmo.mp3) */
