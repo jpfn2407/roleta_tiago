@@ -1,0 +1,128 @@
+.reel {
+  width: 200px;
+  height: 250px;
+  border: 4px solid #444;
+  border-radius: 12px;
+  background: linear-gradient(to bottom, #1a1a1a, #2a2a2a);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5),
+              inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.reel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+}
+
+.reel-image {
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  position: absolute;
+}
+
+.reel-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Position the 3 images vertically */
+.reel-image-top {
+  top: -80px;
+  opacity: 0.3;
+  filter: blur(3px);
+  transform: scale(0.8);
+}
+
+.reel-image-center {
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 1;
+  z-index: 2;
+}
+
+.reel-image-bottom {
+  bottom: -80px;
+  opacity: 0.3;
+  filter: blur(3px);
+  transform: scale(0.8);
+}
+
+/* Highlight center position */
+.reel::before,
+.reel::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #ffd700, transparent);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.reel::before {
+  top: 20px;
+}
+
+.reel::after {
+  bottom: 20px;
+}
+
+/* Spinning animation - adds motion blur effect */
+.reel-spinning .reel-image img {
+  animation: blur-pulse 0.3s ease-in-out infinite;
+}
+
+@keyframes blur-pulse {
+  0%, 100% {
+    filter: blur(0px);
+  }
+  50% {
+    filter: blur(2px);
+  }
+}
+
+/* Slow-motion effect - add glow */
+.reel-slow-motion {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5),
+              0 0 20px rgba(255, 215, 0, 0.5),
+              inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  animation: glow-pulse 1s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(255, 215, 0, 0.5),
+                inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(255, 215, 0, 0.8),
+                inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .reel-image,
+  .reel-spinning .reel-image img {
+    animation: none;
+    transition: none;
+  }
+
+  .reel-slow-motion {
+    animation: none;
+  }
+}
