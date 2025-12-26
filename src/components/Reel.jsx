@@ -1,81 +1,105 @@
 import { useState, useEffect, useRef } from 'react';
-import { SLOT_IMAGES, ANIMATION_SPEEDS } from '../utils/constants.js';
+import { SLOT_IMAGES } from '../utils/constants.js';
 import '../styles/Reel.css';
 
 /**
- * Individual reel component that displays a vertical strip of images
- * Handles spinning animation with normal and slow-motion modes
+ * Individual reel component with continuous scroll animation
+ * Handles spinning with normal and slow-motion modes
  *
  * @param {boolean} isSpinning - Whether the reel is currently spinning
  * @param {boolean} slowMotion - Whether to use slow-motion animation
- * @param {number} finalResult - The final image ID when stopped
+ * @param {number} finalResult - The final image ID when stopped (0-9)
  * @param {number} reelIndex - Index of this reel (0, 1, or 2)
  */
 export function Reel({ isSpinning, slowMotion, finalResult, reelIndex }) {
-  // Display 3 images: top (blurred), center (focus), bottom (blurred)
-  const [displayedImages, setDisplayedImages] = useState([0, 1, 2]);
-  const intervalRef = useRef(null);
+  const [imageStrip, setImageStrip] = useState([]);
+  const stripRef = useRef(null);
 
+  // Generate ordered image strip when spinning starts
   useEffect(() => {
     if (isSpinning) {
-      // Rapidly cycle through random images while spinning
-      const speed = slowMotion ? ANIMATION_SPEEDS.SLOW_MOTION : ANIMATION_SPEEDS.NORMAL;
+      // Create ordered strip with all images in sequence (no duplicates within each cycle)
+      const strip = [];
+      const numRepeats = 3; // Repeat the full sequence 3 times (30 images total)
 
-      intervalRef.current = setInterval(() => {
-        // Generate 3 random images for the visual strip
-        setDisplayedImages([
-          Math.floor(Math.random() * SLOT_IMAGES.length),
-          Math.floor(Math.random() * SLOT_IMAGES.length),
-          Math.floor(Math.random() * SLOT_IMAGES.length)
-        ]);
-      }, speed);
-    } else {
-      // Stopped - show final result in center with neighbors
-      clearInterval(intervalRef.current);
+      for (let i = 0; i < numRepeats; i++) {
+        for (let j = 0; j < SLOT_IMAGES.length; j++) {
+          strip.push(j);
+        }
+      }
 
-      if (finalResult !== null) {
-        // Show final result in center position
-        const prevImage = (finalResult - 1 + SLOT_IMAGES.length) % SLOT_IMAGES.length;
-        const nextImage = (finalResult + 1) % SLOT_IMAGES.length;
+      // Ensure final result appears near the end of the strip for smooth stopping
+      if (finalResult !== null && finalResult !== undefined) {
+        strip[27] = finalResult;
+        strip[28] = finalResult;
+        strip[29] = finalResult;
+      }
 
-        setDisplayedImages([prevImage, finalResult, nextImage]);
+      setImageStrip(strip);
+
+      // Reset transform when starting new spin
+      if (stripRef.current) {
+        stripRef.current.style.transition = 'none';
+        stripRef.current.style.transform = 'translateY(0)';
+      }
+    }
+  }, [isSpinning, finalResult]);
+
+  // Stop animation and align to final result
+  useEffect(() => {
+    if (!isSpinning && finalResult !== null && finalResult !== undefined && stripRef.current && imageStrip.length > 0) {
+      // Calculate position to center the final result (index 27)
+      const targetIndex = 27;
+      const imageHeight = 180; // Height of each image in pixels
+      const offset = targetIndex * imageHeight;
+
+      // Remove animation class and apply smooth transition to final position
+      stripRef.current.classList.remove('reel-strip-spinning', 'reel-strip-slow-motion');
+
+      // Small delay to ensure animation class is removed before transition
+      setTimeout(() => {
+        if (stripRef.current) {
+          stripRef.current.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+          stripRef.current.style.transform = `translateY(-${offset}px)`;
+        }
+      }, 50);
+    }
+  }, [isSpinning, finalResult, imageStrip]);
+
+  // Determine CSS classes for animation
+  const getStripClasses = () => {
+    const classes = ['reel-strip'];
+
+    if (isSpinning) {
+      if (slowMotion) {
+        classes.push('reel-strip-slow-motion');
+      } else {
+        classes.push('reel-strip-spinning');
       }
     }
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isSpinning, slowMotion, finalResult]);
+    return classes.join(' ');
+  };
 
   return (
     <div className={`reel ${isSpinning ? 'reel-spinning' : ''} ${slowMotion ? 'reel-slow-motion' : ''}`}>
-      <div className="reel-container">
-        {/* Top image (blurred) */}
-        <div className="reel-image reel-image-top">
-          <img
-            src={SLOT_IMAGES[displayedImages[0]].src}
-            alt={SLOT_IMAGES[displayedImages[0]].name}
-          />
-        </div>
-
-        {/* Center image (focus - winning position) */}
-        <div className="reel-image reel-image-center">
-          <img
-            src={SLOT_IMAGES[displayedImages[1]].src}
-            alt={SLOT_IMAGES[displayedImages[1]].name}
-          />
-        </div>
-
-        {/* Bottom image (blurred) */}
-        <div className="reel-image reel-image-bottom">
-          <img
-            src={SLOT_IMAGES[displayedImages[2]].src}
-            alt={SLOT_IMAGES[displayedImages[2]].name}
-          />
-        </div>
+      <div
+        ref={stripRef}
+        className={getStripClasses()}
+      >
+        {imageStrip.map((imageId, index) => (
+          <div key={index} className="reel-strip-image">
+            <img
+              src={SLOT_IMAGES[imageId].src}
+              alt={SLOT_IMAGES[imageId].name}
+            />
+          </div>
+        ))}
       </div>
+
+      {/* Blur overlays for top and bottom */}
+      <div className="reel-blur-top"></div>
+      <div className="reel-blur-bottom"></div>
     </div>
   );
 }

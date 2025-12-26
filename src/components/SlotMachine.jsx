@@ -2,6 +2,9 @@ import { Reel } from './Reel.jsx';
 import { SpinButton } from './SpinButton.jsx';
 import { WinnerDisplay } from './WinnerDisplay.jsx';
 import { SettingsModal } from './SettingsModal.jsx';
+import { Zeus } from './Zeus.jsx';
+import { HeaderImage } from './HeaderImage.jsx';
+import { MuteButton } from './MuteButton.jsx';
 import { useSlotMachine } from '../hooks/useSlotMachine.js';
 import { useSlotMachineContext } from '../context/SlotMachineContext.jsx';
 import '../styles/SlotMachine.css';
@@ -28,7 +31,16 @@ export function SlotMachine() {
 
   return (
     <div className="slot-machine">
-      {/* Settings button */}
+      {/* Zeus levitating animation (fixed position) */}
+      <Zeus />
+
+      {/* Mute button (bottom-left) */}
+      <MuteButton />
+
+      {/* Settings hover zone (bottom-right) - invisible trigger area */}
+      <div className="settings-hover-zone"></div>
+
+      {/* Settings button (bottom-right) - invisible until hover */}
       <button
         className="settings-button"
         onClick={handleOpenSettings}
@@ -38,8 +50,8 @@ export function SlotMachine() {
         ⚙️
       </button>
 
-      {/* Title */}
-      <h1 className="slot-machine-title">Slot Machine</h1>
+      {/* Header image - replaces title */}
+      <HeaderImage />
 
       {/* Reels container */}
       <div className="reels-container">

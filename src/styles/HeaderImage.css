@@ -1,0 +1,18 @@
+.header-image-container {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.header-image {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+}
+
+/* Responsive: hide header on mobile to save space */
+@media (max-width: 768px) {
+  .header-image-container {
+    display: none;
+  }
+}

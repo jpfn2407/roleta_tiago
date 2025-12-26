@@ -24,6 +24,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow-x: hidden;
+  background: url('./assets/images/background.png') center/cover no-repeat fixed;
 }
 
 h1, h2, h3, h4, h5, h6 {

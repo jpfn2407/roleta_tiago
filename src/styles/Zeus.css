@@ -1,0 +1,45 @@
+.zeus-container {
+  position: fixed;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  pointer-events: none; /* Don't block clicks */
+}
+
+.zeus-image {
+  width: 450px;
+  height: auto;
+  animation: levitate 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+}
+
+/* Levitation animation - smooth up and down movement */
+@keyframes levitate {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Responsive: smaller and repositioned on mobile */
+@media (max-width: 768px) {
+  .zeus-container {
+    right: 1%;
+    top: 5%;
+    transform: none;
+  }
+
+  .zeus-image {
+    width: 80px;
+  }
+}
+
+/* Reduce animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .zeus-image {
+    animation: none;
+  }
+}

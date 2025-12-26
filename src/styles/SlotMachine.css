@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 50vh;
   padding: 2rem;
   position: relative;
 }
@@ -18,9 +18,19 @@
   letter-spacing: 0.1em;
 }
 
+/* Settings hover zone - invisible trigger area in bottom-right */
+.settings-hover-zone {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  z-index: 99;
+}
+
 .settings-button {
-  position: absolute;
-  top: 2rem;
+  position: fixed;
+  bottom: 2rem;
   right: 2rem;
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid rgba(255, 255, 255, 0.2);
@@ -33,6 +43,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.settings-hover-zone:hover + .settings-button,
+.settings-button:hover {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .settings-button:hover {
@@ -230,9 +249,17 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
+  .slot-machine {
+    padding: 0.5rem;
+    min-height: 100vh;
+    justify-content: center;
+  }
+
   .reels-container {
-    gap: 1rem;
-    padding: 1rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    transform: scale(0.7) translateX(-10%);
   }
 
   .slot-machine-title {
@@ -240,13 +267,28 @@
   }
 
   .spin-button {
-    padding: 1rem 3rem;
-    font-size: 1.5rem;
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
   }
 
+  /* Mobile: always show settings button with reduced opacity */
   .settings-button {
     width: 40px;
     height: 40px;
     font-size: 1.2rem;
+    opacity: 0.4;
+    pointer-events: auto;
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .settings-button:hover {
+    opacity: 1;
+  }
+
+  .settings-hover-zone {
+    width: 80px;
+    height: 80px;
   }
 }

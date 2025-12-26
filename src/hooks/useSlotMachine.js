@@ -3,6 +3,7 @@ import { useSlotMachineContext } from '../context/SlotMachineContext.jsx';
 import { calculateEffectiveProbability, generateReelResults } from '../utils/probabilityEngine.js';
 import { shouldTriggerSlowMotion, getWinType } from '../utils/reelLogic.js';
 import { SPIN_DURATIONS } from '../utils/constants.js';
+import { useSoundEffects } from './useSoundEffects.js';
 
 /**
  * Custom hook that orchestrates the slot machine spin sequence
@@ -20,6 +21,9 @@ export function useSlotMachine() {
     incrementProgressiveCounter,
     resetProgressiveCounter
   } = useSlotMachineContext();
+
+  // Sound effects
+  const { playWinSound, playSlowmoSound, playLockSound } = useSoundEffects();
 
   /**
    * Helper function to create a promise that resolves after a delay
@@ -54,6 +58,7 @@ export function useSlotMachine() {
       prev[1],
       prev[2]
     ]);
+    playLockSound(); // Play lock sound when reel 1 stops
 
     // 5. Stop Reel 2 after 3 seconds total (1 more second)
     await sleep(SPIN_DURATIONS.REEL_2 - SPIN_DURATIONS.REEL_1);
@@ -62,6 +67,7 @@ export function useSlotMachine() {
       { ...prev[1], isSpinning: false },
       prev[2]
     ]);
+    playLockSound(); // Play lock sound when reel 2 stops
 
     // 6. Check if first two reels match - enable slow-motion if they do
     const shouldSlowMo = shouldTriggerSlowMotion(results[0], results[1]);
@@ -73,6 +79,9 @@ export function useSlotMachine() {
         prev[1],
         { ...prev[2], slowMotion: true }
       ]);
+
+      // Play slow-motion sound effect
+      playSlowmoSound();
     }
 
     // 7. Stop Reel 3 after either 4s (normal) or 6s (suspense) total
@@ -87,12 +96,18 @@ export function useSlotMachine() {
       prev[1],
       { ...prev[2], isSpinning: false, slowMotion: false }
     ]);
+    playLockSound(); // Play lock sound when reel 3 stops
 
     // 8. Detect win type
     const winResult = getWinType(results);
     setCurrentResults(results);
     setWinType(winResult);
     setIsSpinning(false);
+
+    // Play win sound ONLY on max prize (jackpot)
+    if (winResult === 'max') {
+      playWinSound();
+    }
 
     // 9. Update progressive counter
     if (winResult === 'max') {
@@ -111,7 +126,10 @@ export function useSlotMachine() {
     setCurrentResults,
     setWinType,
     incrementProgressiveCounter,
-    resetProgressiveCounter
+    resetProgressiveCounter,
+    playWinSound,
+    playSlowmoSound,
+    playLockSound
   ]);
 
   return {

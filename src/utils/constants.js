@@ -1,14 +1,25 @@
-// Image imports
-import winnerTiago from '../assets/winner_tiago.png';
-import borges from '../assets/borges.png';
-import daniel from '../assets/daniel.png';
-import david from '../assets/david.png';
-import hugo from '../assets/hugo.png';
-import joao from '../assets/joao.png';
-import melo from '../assets/melo.png';
-import picoito from '../assets/picoito.png';
-import samuel from '../assets/samuel.png';
-import tomas from '../assets/tomas.png';
+// Slot machine image imports
+import winnerTiago from '../assets/images/winner_tiago.png';
+import borges from '../assets/images/borges.png';
+import daniel from '../assets/images/daniel.png';
+import david from '../assets/images/david.png';
+import hugo from '../assets/images/hugo.png';
+import joao from '../assets/images/joao.png';
+import melo from '../assets/images/melo.png';
+import picoito from '../assets/images/picoito.png';
+import samuel from '../assets/images/samuel.png';
+import tomas from '../assets/images/tomas.png';
+
+// Additional visual assets
+import zeusImage from '../assets/images/zeus.png';
+import backgroundImage from '../assets/images/background.png';
+import headerImage from '../assets/images/header.png';
+
+// Sound assets
+import backgroundMusic from '../assets/sounds/background_music.mp3';
+import winSound from '../assets/sounds/win.mp3';
+import slowmoSound from '../assets/sounds/slowmo.mp3';
+import lockSound from '../assets/sounds/lock.mp3';
 
 // Slot images array - Index 0 is the MAX PRIZE winner
 export const SLOT_IMAGES = [
@@ -56,4 +67,25 @@ export const MAX_PROBABILITY = 0.95; // 95% cap
 export const PROGRESSIVE_INCREMENT_BOUNDS = {
   MIN: 0.005,  // 0.5%
   MAX: 0.1     // 10%
+};
+
+// Additional images for visual enhancements
+export const IMAGES = {
+  zeus: zeusImage,
+  background: backgroundImage,
+  header: headerImage
+};
+
+// Sound files
+export const SOUNDS = {
+  backgroundMusic,
+  win: winSound,
+  slowmo: slowmoSound,
+  lock: lockSound
+};
+
+// Sound durations (in milliseconds)
+export const SOUND_DURATIONS = {
+  WIN: 3000,     // 3 seconds
+  SLOWMO: 5000   // 5 seconds
 };

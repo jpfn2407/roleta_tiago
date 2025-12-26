@@ -1,6 +1,6 @@
 .reel {
   width: 200px;
-  height: 250px;
+  height: 400px;
   border: 4px solid #444;
   border-radius: 12px;
   background: linear-gradient(to bottom, #1a1a1a, #2a2a2a);
@@ -10,55 +10,95 @@
               inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
-.reel-container {
+/* Reel strip container - holds all images in vertical column */
+.reel-strip {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  position: relative;
+  position: absolute;
+  top: 125px;  /* Offset to center the visible window */
+  left: 10px;
+  width: 180px;
+  will-change: transform;
 }
 
-.reel-image {
+/* Individual image in the strip */
+.reel-strip-image {
   width: 180px;
   height: 180px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  position: absolute;
 }
 
-.reel-image img {
+.reel-strip-image img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
   border-radius: 8px;
 }
 
-/* Position the 3 images vertically */
-.reel-image-top {
-  top: -80px;
-  opacity: 0.3;
-  filter: blur(3px);
-  transform: scale(0.8);
+/* Continuous scroll animations */
+@keyframes scroll-down-fast {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(1800px);  /* 10 images × 180px = one complete cycle */
+  }
 }
 
-.reel-image-center {
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 1;
-  z-index: 2;
+@keyframes scroll-down-slow {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(1800px);  /* 10 images × 180px = one complete cycle */
+  }
 }
 
-.reel-image-bottom {
-  bottom: -80px;
-  opacity: 0.3;
-  filter: blur(3px);
-  transform: scale(0.8);
+/* Apply fast scroll animation */
+.reel-strip-spinning {
+  animation: scroll-down-fast 1s linear infinite;
 }
 
-/* Highlight center position */
+/* Apply slow-motion scroll animation (4s to match slowmo.mp3) */
+.reel-strip-slow-motion {
+  animation: scroll-down-slow 4s linear infinite;
+}
+
+/* Blur overlays for top and bottom */
+.reel-blur-top,
+.reel-blur-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 80px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.reel-blur-top {
+  top: 0;
+  background: linear-gradient(to bottom,
+    rgba(26, 26, 26, 1) 0%,
+    rgba(26, 26, 26, 0.8) 50%,
+    rgba(26, 26, 26, 0) 100%
+  );
+  backdrop-filter: blur(3px);
+}
+
+.reel-blur-bottom {
+  bottom: 0;
+  background: linear-gradient(to top,
+    rgba(26, 26, 26, 1) 0%,
+    rgba(26, 26, 26, 0.8) 50%,
+    rgba(26, 26, 26, 0) 100%
+  );
+  backdrop-filter: blur(3px);
+}
+
+/* Highlight center position with golden lines */
 .reel::before,
 .reel::after {
   content: '';
@@ -79,21 +119,7 @@
   bottom: 20px;
 }
 
-/* Spinning animation - adds motion blur effect */
-.reel-spinning .reel-image img {
-  animation: blur-pulse 0.3s ease-in-out infinite;
-}
-
-@keyframes blur-pulse {
-  0%, 100% {
-    filter: blur(0px);
-  }
-  50% {
-    filter: blur(2px);
-  }
-}
-
-/* Slow-motion effect - add glow */
+/* Slow-motion effect - add glow to reel container */
 .reel-slow-motion {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5),
               0 0 20px rgba(255, 215, 0, 0.5),
@@ -116,13 +142,16 @@
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .reel-image,
-  .reel-spinning .reel-image img {
+  .reel-strip-spinning,
+  .reel-strip-slow-motion {
     animation: none;
-    transition: none;
   }
 
   .reel-slow-motion {
     animation: none;
+  }
+
+  .reel-strip {
+    transition: transform 0.1s linear;
   }
 }
