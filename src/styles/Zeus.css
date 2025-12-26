@@ -25,15 +25,23 @@
 }
 
 /* Responsive: smaller and repositioned on mobile */
-@media (max-width: 768px) {
+@media (pointer: coarse) {
   .zeus-container {
+    position: fixed;
     right: 1%;
-    top: 5%;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
     transform: none;
+    max-width: 40%;
   }
 
   .zeus-image {
-    width: 80px;
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
   }
 }
 

@@ -27,12 +27,12 @@
 }
 
 /* Responsive: smaller button on mobile */
-@media (max-width: 768px) {
+@media (pointer: coarse) {
   .mute-button {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-    bottom: 1rem;
-    left: 1rem;
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
   }
 }

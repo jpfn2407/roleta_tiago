@@ -207,7 +207,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (pointer: coarse) {
   .settings-modal-content {
     padding: 1.5rem;
   }

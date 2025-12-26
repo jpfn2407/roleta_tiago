@@ -44,8 +44,8 @@
   opacity: 0.8;
 }
 
-/* Only show on mobile devices (max-width: 768px) */
-@media (min-width: 769px) {
+/* Only show on mobile devices */
+@media (pointer: coarse) {
   .rotate-message-overlay {
     display: none;
   }

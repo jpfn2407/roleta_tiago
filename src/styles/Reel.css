@@ -140,6 +140,29 @@
   }
 }
 
+/* Mobile responsive: smaller reels */
+@media (pointer: coarse) {
+  .reel {
+    width: 150px;
+    height: 300px;
+  }
+
+  .reel-strip {
+    left: 5px;
+    width: 140px;
+  }
+
+  .reel-strip-image {
+    width: 140px;
+    height: 140px;
+  }
+
+  .reel::before,
+  .reel::after {
+    height: 2px;
+  }
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .reel-strip-spinning,
