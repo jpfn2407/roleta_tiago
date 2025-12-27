@@ -56,9 +56,12 @@ export const DEFAULT_SETTINGS = {
   trueWinnerProbability: 0.01,     // 2% base probability for max prize
   progressiveMode: true,            // Progressive mode ON by default
   progressiveIncrementRate: 0.005,   // 0.5% increment per spin
-  smallWinProbability: 0.15,        // 5% probability for small wins (bonus spins)
+  smallWinProbability: 0.15,        // 15% probability for small wins (bonus spins)
   attemptsSinceMaxPrize: 0         // Counter starts at 0
 };
+
+// Bonus increment when small win occurs
+export const BONUS_INCREMENT = 0.01; // 1% added to base probability on small wins
 
 // localStorage key for persisting settings
 export const STORAGE_KEY = 'slotMachineSettings';
@@ -77,6 +80,7 @@ export const SMALL_WIN_PROBABILITY_BOUNDS = {
   MIN: 0,      // 0%
   MAX: 0.2     // 20%
 };
+
 
 // Additional images for visual enhancements
 export const IMAGES = {

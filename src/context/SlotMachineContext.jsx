@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { DEFAULT_SETTINGS, STORAGE_KEY } from '../utils/constants.js';
+import { DEFAULT_SETTINGS, STORAGE_KEY, BONUS_INCREMENT } from '../utils/constants.js';
 
 const SlotMachineContext = createContext(null);
 
@@ -83,11 +83,11 @@ export function SlotMachineProvider({ children }) {
     }));
   }, []);
 
-  // Add bonus increment (on small win - add 1% to base probability)
+  // Add bonus increment (on small win - add bonus to base probability)
   const addBonusIncrement = useCallback(() => {
     setSettings(prev => ({
       ...prev,
-      trueWinnerProbability: Math.min(prev.trueWinnerProbability + 0.01, 0.95) // Cap at 95%
+      trueWinnerProbability: Math.min(prev.trueWinnerProbability + BONUS_INCREMENT, 0.95) // Cap at 95%
     }));
   }, []);
 
