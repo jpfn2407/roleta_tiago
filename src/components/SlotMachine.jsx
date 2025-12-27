@@ -5,8 +5,10 @@ import { SettingsModal } from './SettingsModal.jsx';
 import { Zeus } from './Zeus.jsx';
 import { HeaderImage } from './HeaderImage.jsx';
 import { MuteButton } from './MuteButton.jsx';
+import { LandscapeWarning } from './LandscapeWarning.jsx';
 import { useSlotMachine } from '../hooks/useSlotMachine.js';
 import { useSlotMachineContext } from '../context/SlotMachineContext.jsx';
+import { calculateEffectiveProbability } from '../utils/probabilityEngine.js';
 import '../styles/SlotMachine.css';
 
 /**
@@ -15,7 +17,11 @@ import '../styles/SlotMachine.css';
  */
 export function SlotMachine() {
   const { spin, isSpinning, reelStates } = useSlotMachine();
-  const { winType, setWinType, showSettings, setShowSettings } = useSlotMachineContext();
+  const { winType, setWinType, showSettings, setShowSettings, settings } = useSlotMachineContext();
+
+  // Calculate current effective probability
+  const effectiveProbability = calculateEffectiveProbability(settings);
+  const probabilityPercentage = (effectiveProbability * 100).toFixed(2);
 
   const handleOpenSettings = () => {
     setShowSettings(true);
@@ -26,11 +32,21 @@ export function SlotMachine() {
   };
 
   const handleDismissWinner = () => {
+    // Check if it was a bonus spin before dismissing
+    const wasBonus = winType === 'small';
     setWinType(null);
+
+    // Trigger auto-spin after dismissing bonus message
+    if (wasBonus && !isSpinning) {
+      setTimeout(() => spin(), 100);
+    }
   };
 
   return (
     <div className="slot-machine">
+      {/* Landscape warning for mobile in portrait mode */}
+      <LandscapeWarning />
+
       {/* Zeus levitating animation (fixed position) */}
       <Zeus />
 
@@ -68,6 +84,11 @@ export function SlotMachine() {
 
       {/* Spin button */}
       <SpinButton onClick={spin} disabled={isSpinning} />
+
+      {/* Probability display */}
+      <div className="probability-display">
+        Jackpot Probability: {probabilityPercentage}%
+      </div>
 
       {/* Winner display */}
       <WinnerDisplay winType={winType} onDismiss={handleDismissWinner} />

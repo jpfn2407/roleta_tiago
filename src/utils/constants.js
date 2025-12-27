@@ -12,6 +12,7 @@ import tomas from '../assets/images/tomas.png';
 
 // Additional visual assets
 import zeusImage from '../assets/images/zeus.png';
+import zeusBonusImage from '../assets/images/zeus_bonus.png';
 import backgroundImage from '../assets/images/background.png';
 import headerImage from '../assets/images/header.png';
 
@@ -20,6 +21,7 @@ import backgroundMusic from '../assets/sounds/background_music.mp3';
 import winSound from '../assets/sounds/win.mp3';
 import slowmoSound from '../assets/sounds/slowmo.mp3';
 import lockSound from '../assets/sounds/lock.mp3';
+import powerSound from '../assets/sounds/power.mp3';
 
 // Slot images array - Index 0 is the MAX PRIZE winner
 export const SLOT_IMAGES = [
@@ -38,9 +40,9 @@ export const SLOT_IMAGES = [
 // Timing constants for reel animations (in milliseconds)
 export const SPIN_DURATIONS = {
   REEL_1: 2000,        // First reel stops after 2 seconds
-  REEL_2: 3000,        // Second reel stops after 3 seconds
-  REEL_3_NORMAL: 4000, // Third reel stops after 4 seconds (normal)
-  REEL_3_SUSPENSE: 6000 // Third reel stops after 6 seconds (slow-motion suspense)
+  REEL_2: 3500,        // Second reel stops after 3.5 seconds (increased for suspense)
+  REEL_3_NORMAL: 5000, // Third reel stops after 5 seconds (normal)
+  REEL_3_SUSPENSE: 7500 // Third reel stops after 7.5 seconds (slow-motion suspense)
 };
 
 // Animation speeds (interval in milliseconds)
@@ -51,9 +53,10 @@ export const ANIMATION_SPEEDS = {
 
 // Default game settings
 export const DEFAULT_SETTINGS = {
-  trueWinnerProbability: 0.1,      // 10% base probability for max prize
+  trueWinnerProbability: 0.01,     // 2% base probability for max prize
   progressiveMode: true,            // Progressive mode ON by default
-  progressiveIncrementRate: 0.02,   // 2% increment per spin
+  progressiveIncrementRate: 0.005,   // 0.5% increment per spin
+  smallWinProbability: 0.15,        // 5% probability for small wins (bonus spins)
   attemptsSinceMaxPrize: 0         // Counter starts at 0
 };
 
@@ -69,9 +72,16 @@ export const PROGRESSIVE_INCREMENT_BOUNDS = {
   MAX: 0.1     // 10%
 };
 
+// Small win probability bounds (for slider)
+export const SMALL_WIN_PROBABILITY_BOUNDS = {
+  MIN: 0,      // 0%
+  MAX: 0.2     // 20%
+};
+
 // Additional images for visual enhancements
 export const IMAGES = {
   zeus: zeusImage,
+  zeusBonus: zeusBonusImage,
   background: backgroundImage,
   header: headerImage
 };
@@ -81,7 +91,8 @@ export const SOUNDS = {
   backgroundMusic,
   win: winSound,
   slowmo: slowmoSound,
-  lock: lockSound
+  lock: lockSound,
+  power: powerSound
 };
 
 // Sound durations (in milliseconds)

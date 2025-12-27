@@ -148,6 +148,7 @@
   }
 
   .reel-strip {
+    top: -2940px;  /* Adjusted for mobile: 22 * 140px - offset for centering */
     left: 5px;
     width: 140px;
   }
@@ -160,6 +161,25 @@
   .reel::before,
   .reel::after {
     height: 2px;
+  }
+
+  /* Mobile animations - adjusted for 140px images */
+  @keyframes scroll-down-fast {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(1400px);  /* 10 images × 140px for mobile */
+    }
+  }
+
+  @keyframes scroll-down-slow {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(1400px);  /* 10 images × 140px for mobile */
+    }
   }
 }
 

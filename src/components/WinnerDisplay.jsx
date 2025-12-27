@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 /**
  * Winner display component
  * Shows different messages and animations based on win type
@@ -8,32 +6,27 @@ import { useEffect } from 'react';
  * @param {Function} onDismiss - Handler function when display is dismissed
  */
 export function WinnerDisplay({ winType, onDismiss }) {
-  useEffect(() => {
-    if (winType) {
-      // Auto-dismiss after timeout
-      const timeout = winType === 'max' ? 3000 : 1500;
-      const timer = setTimeout(() => {
-        if (onDismiss) {
-          onDismiss();
-        }
-      }, timeout);
-
-      return () => clearTimeout(timer);
-    }
-  }, [winType, onDismiss]);
-
   if (!winType) return null;
 
   const isMaxPrize = winType === 'max';
 
+  const handleClick = () => {
+    if (onDismiss) {
+      onDismiss();
+    }
+  };
+
   return (
-    <div className={`winner-display ${isMaxPrize ? 'winner-max' : 'winner-small'}`}>
+    <div
+      className={`winner-display ${isMaxPrize ? 'winner-max' : 'winner-small'}`}
+      onClick={handleClick}
+    >
       <div className="winner-content">
         {isMaxPrize ? (
           <>
             <div className="winner-icon">🎉</div>
-            <h2 className="winner-title">MAX PRIZE!</h2>
-            <p className="winner-message">TIAGO WINS!</p>
+            <h2 className="winner-title">JACKPOT!</h2>
+            <p className="winner-click-hint">Click to continue</p>
             <div className="confetti">
               {[...Array(20)].map((_, i) => (
                 <div
@@ -50,8 +43,10 @@ export function WinnerDisplay({ winType, onDismiss }) {
           </>
         ) : (
           <>
-            <div className="winner-icon-small">✓</div>
-            <p className="winner-message-small">Nice! Three of a kind</p>
+            <div className="winner-icon">🎁</div>
+            <h2 className="winner-title">BONUS SPIN!</h2>
+            <p className="winner-message">and +1% Jackpot Probability!</p>
+            <p className="winner-click-hint">Click to continue</p>
           </>
         )}
       </div>

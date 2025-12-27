@@ -11,32 +11,39 @@ export function useSoundEffects() {
   const winAudioRef = useRef(null);
   const slowmoAudioRef = useRef(null);
   const lockAudioRef = useRef(null);
+  const powerAudioRef = useRef(null);
 
   // Initialize audio elements on mount
   useEffect(() => {
     const winAudio = new Audio(SOUNDS.win);
     const slowmoAudio = new Audio(SOUNDS.slowmo);
     const lockAudio = new Audio(SOUNDS.lock);
+    const powerAudio = new Audio(SOUNDS.power);
 
     winAudio.volume = 0.6;   // 60% volume for win sound
     slowmoAudio.volume = 0.5; // 50% volume for slowmo sound
     lockAudio.volume = 0.4;   // 40% volume for lock sound
+    powerAudio.volume = 0.6;  // 60% volume for power sound
 
     winAudioRef.current = winAudio;
     slowmoAudioRef.current = slowmoAudio;
     lockAudioRef.current = lockAudio;
+    powerAudioRef.current = powerAudio;
 
     // Cleanup on unmount
     return () => {
       winAudio.pause();
       slowmoAudio.pause();
       lockAudio.pause();
+      powerAudio.pause();
       winAudio.src = '';
       slowmoAudio.src = '';
       lockAudio.src = '';
+      powerAudio.src = '';
       winAudioRef.current = null;
       slowmoAudioRef.current = null;
       lockAudioRef.current = null;
+      powerAudioRef.current = null;
     };
   }, []);
 
@@ -76,9 +83,20 @@ export function useSoundEffects() {
     }
   }, []);
 
+  // Play power sound (when first two reels match)
+  const playPowerSound = useCallback(() => {
+    if (powerAudioRef.current) {
+      powerAudioRef.current.currentTime = 0;
+      powerAudioRef.current.play().catch(err => {
+        console.warn('Power sound play failed:', err);
+      });
+    }
+  }, []);
+
   return {
     playWinSound,
     playSlowmoSound,
-    playLockSound
+    playLockSound,
+    playPowerSound
   };
 }

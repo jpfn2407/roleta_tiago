@@ -54,6 +54,9 @@ export function SlotMachineProvider({ children }) {
   // Settings modal visibility
   const [showSettings, setShowSettings] = useState(false);
 
+  // Zeus bonus mode (when first two reels match)
+  const [zeusBonusActive, setZeusBonusActive] = useState(false);
+
   // Save settings to localStorage whenever they change
   useEffect(() => {
     saveSettings(settings);
@@ -80,12 +83,21 @@ export function SlotMachineProvider({ children }) {
     }));
   }, []);
 
+  // Add bonus increment (on small win - add 1% to base probability)
+  const addBonusIncrement = useCallback(() => {
+    setSettings(prev => ({
+      ...prev,
+      trueWinnerProbability: Math.min(prev.trueWinnerProbability + 0.01, 0.95) // Cap at 95%
+    }));
+  }, []);
+
   const value = {
     // Settings
     settings,
     updateSettings,
     incrementProgressiveCounter,
     resetProgressiveCounter,
+    addBonusIncrement,
 
     // Game state
     isSpinning,
@@ -99,7 +111,9 @@ export function SlotMachineProvider({ children }) {
 
     // UI state
     showSettings,
-    setShowSettings
+    setShowSettings,
+    zeusBonusActive,
+    setZeusBonusActive
   };
 
   return (

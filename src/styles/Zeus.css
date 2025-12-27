@@ -1,17 +1,43 @@
 .zeus-container {
   position: fixed;
-  right: 5%;
+  right: 2%;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
   pointer-events: none; /* Don't block clicks */
+  max-width: 30vw; /* Shrink with window width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .zeus-image {
-  width: 450px;
+  width: 100%;
+  max-width: 450px;
   height: auto;
   animation: levitate 3s ease-in-out infinite;
   filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+  transition: filter 0.1s ease;
+}
+
+/* Electrocution effect when Zeus is in bonus mode */
+.zeus-image.electrocuted {
+  animation: levitate 3s ease-in-out infinite, electrocute 0.2s ease-in-out 5;
+}
+
+@keyframes electrocute {
+  0%, 100% {
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+  }
+  25% {
+    filter: drop-shadow(0 0 30px rgba(100, 150, 255, 1)) brightness(1.5);
+  }
+  50% {
+    filter: drop-shadow(0 0 40px rgba(255, 255, 255, 1)) brightness(2);
+  }
+  75% {
+    filter: drop-shadow(0 0 30px rgba(100, 150, 255, 1)) brightness(1.5);
+  }
 }
 
 /* Levitation animation - smooth up and down movement */

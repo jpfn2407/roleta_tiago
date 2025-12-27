@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSlotMachineContext } from '../context/SlotMachineContext.jsx';
-import { PROGRESSIVE_INCREMENT_BOUNDS } from '../utils/constants.js';
+import { PROGRESSIVE_INCREMENT_BOUNDS, SMALL_WIN_PROBABILITY_BOUNDS } from '../utils/constants.js';
 import '../styles/SettingsModal.css';
 
 /**
@@ -17,12 +17,14 @@ export function SettingsModal({ isOpen, onClose }) {
   const [baseProbability, setBaseProbability] = useState(settings.trueWinnerProbability);
   const [progressiveMode, setProgressiveMode] = useState(settings.progressiveMode);
   const [incrementRate, setIncrementRate] = useState(settings.progressiveIncrementRate);
+  const [smallWinProbability, setSmallWinProbability] = useState(settings.smallWinProbability);
 
   // Sync with context when settings change externally
   useEffect(() => {
     setBaseProbability(settings.trueWinnerProbability);
     setProgressiveMode(settings.progressiveMode);
     setIncrementRate(settings.progressiveIncrementRate);
+    setSmallWinProbability(settings.smallWinProbability);
   }, [settings]);
 
   // Handle ESC key to close
@@ -46,7 +48,8 @@ export function SettingsModal({ isOpen, onClose }) {
     updateSettings({
       trueWinnerProbability: baseProbability,
       progressiveMode: progressiveMode,
-      progressiveIncrementRate: incrementRate
+      progressiveIncrementRate: incrementRate,
+      smallWinProbability: smallWinProbability
     });
     onClose();
   };
@@ -56,7 +59,30 @@ export function SettingsModal({ isOpen, onClose }) {
     setBaseProbability(settings.trueWinnerProbability);
     setProgressiveMode(settings.progressiveMode);
     setIncrementRate(settings.progressiveIncrementRate);
+    setSmallWinProbability(settings.smallWinProbability);
     onClose();
+  };
+
+  const handleReset = () => {
+    // Ask for confirmation
+    const confirmed = window.confirm(
+      'Are you sure you want to reset statistics? This will:\n\n' +
+      '- Reset attempts counter to 0\n' +
+      '- Apply current settings\n\n' +
+      'This action cannot be undone.'
+    );
+
+    if (confirmed) {
+      // Apply current form values and reset statistics
+      updateSettings({
+        trueWinnerProbability: baseProbability,
+        progressiveMode: progressiveMode,
+        progressiveIncrementRate: incrementRate,
+        smallWinProbability: smallWinProbability,
+        attemptsSinceMaxPrize: 0 // Reset statistics
+      });
+      onClose();
+    }
   };
 
   if (!isOpen) return null;
@@ -126,6 +152,36 @@ export function SettingsModal({ isOpen, onClose }) {
             </p>
           </div>
         )}
+
+        {/* Input 4: Bonus Spin Probability */}
+        <div className="settings-group">
+          <label className="settings-label">
+            Bonus Spin Probability: {(smallWinProbability * 100).toFixed(1)}%
+          </label>
+          <input
+            type="range"
+            min={SMALL_WIN_PROBABILITY_BOUNDS.MIN}
+            max={SMALL_WIN_PROBABILITY_BOUNDS.MAX}
+            step="0.005"
+            value={smallWinProbability}
+            onChange={(e) => setSmallWinProbability(parseFloat(e.target.value))}
+            className="settings-slider"
+          />
+          <div className="settings-range-labels">
+            <span>0%</span>
+            <span>20%</span>
+          </div>
+          <p className="settings-description">
+            Chance of triple-match bonus spins (grants +1% jackpot probability and auto-spin)
+          </p>
+        </div>
+
+        {/* Reset Statistics Button */}
+        <div className="settings-reset-container">
+          <button onClick={handleReset} className="settings-button-reset">
+            Reset Statistics
+          </button>
+        </div>
 
         {/* Buttons */}
         <div className="settings-buttons">

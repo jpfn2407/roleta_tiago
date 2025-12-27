@@ -115,6 +115,17 @@
   }
 }
 
+/* Probability display styles */
+.probability-display {
+  font-size: 1rem;
+  color: #000000;
+  text-align: center;
+  margin-top: 0.5rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
 /* Winner display styles */
 .winner-display {
   position: fixed;
@@ -122,7 +133,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .winner-content {
@@ -192,33 +204,45 @@
   margin: 0;
 }
 
-/* Small win styles */
-.winner-small .winner-content {
-  animation: winner-fade-in 0.3s ease-out;
-  padding: 2rem;
+.winner-click-hint {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 1.5rem;
+  animation: fade-pulse 2s ease-in-out infinite;
 }
 
-@keyframes winner-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
+@keyframes fade-pulse {
+  0%, 100% {
+    opacity: 0.5;
   }
-  to {
+  50% {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-.winner-icon-small {
-  font-size: 2rem;
-  color: #4ecdc4;
-  margin-bottom: 0.5rem;
+/* Small win (bonus spin) styles */
+.winner-small .winner-content {
+  animation: winner-bounce 0.5s ease-out;
+  border: 4px solid #4ecdc4;
+  padding: 3rem;
 }
 
-.winner-message-small {
-  font-size: 1.2rem;
+.winner-small .winner-title {
   color: #4ecdc4;
-  margin: 0;
+  text-shadow: 0 0 20px rgba(78, 205, 196, 0.8);
+}
+
+.winner-small .winner-icon {
+  animation: icon-pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
 }
 
 /* Confetti animation */
@@ -256,16 +280,17 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding-top: 5vh;
+    padding-top: 2vh;
     overflow: hidden;
   }
 
   .reels-container {
     gap: 0.3rem;
     padding: 0.5rem;
-    margin-bottom: 0.5rem;
-    max-height: 50vh;
+    margin-bottom: 0.8rem;
+    max-height: 45vh;
     transform: scale(0.7);
+    flex-shrink: 0;
   }
 
   .slot-machine-title {
@@ -275,8 +300,17 @@
   .spin-button {
     padding: 0.6rem 1.5rem;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.3rem;
     margin-top: auto;
+    flex-shrink: 0;
+  }
+
+  .probability-display {
+    font-size: 0.75rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    flex-shrink: 0;
   }
 
   /* Mobile: always show settings button with reduced opacity */

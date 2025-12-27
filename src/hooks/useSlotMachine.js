@@ -19,11 +19,13 @@ export function useSlotMachine() {
     setCurrentResults,
     setWinType,
     incrementProgressiveCounter,
-    resetProgressiveCounter
+    resetProgressiveCounter,
+    addBonusIncrement,
+    setZeusBonusActive
   } = useSlotMachineContext();
 
   // Sound effects
-  const { playWinSound, playSlowmoSound, playLockSound } = useSoundEffects();
+  const { playWinSound, playSlowmoSound, playLockSound, playPowerSound } = useSoundEffects();
 
   /**
    * Helper function to create a promise that resolves after a delay
@@ -40,7 +42,7 @@ export function useSlotMachine() {
     const effectiveProbability = calculateEffectiveProbability(settings);
 
     // 2. Generate results for all 3 reels
-    const results = generateReelResults(effectiveProbability);
+    const results = generateReelResults(effectiveProbability, settings.smallWinProbability);
 
     // 3. Start all reels spinning
     setIsSpinning(true);
@@ -60,7 +62,7 @@ export function useSlotMachine() {
     ]);
     playLockSound(); // Play lock sound when reel 1 stops
 
-    // 5. Stop Reel 2 after 3 seconds total (1 more second)
+    // 5. Stop Reel 2 after 4 seconds total (2 more seconds)
     await sleep(SPIN_DURATIONS.REEL_2 - SPIN_DURATIONS.REEL_1);
     setReelStates(prev => [
       prev[0],
@@ -73,6 +75,15 @@ export function useSlotMachine() {
     const shouldSlowMo = shouldTriggerSlowMotion(results[0], results[1]);
 
     if (shouldSlowMo) {
+      // First two reels match! Activate Zeus bonus mode and play power sound
+      playPowerSound();
+      setZeusBonusActive(true);
+
+      // Deactivate Zeus bonus mode after 4 seconds
+      setTimeout(() => {
+        setZeusBonusActive(false);
+      }, 4000);
+
       // Enable slow-motion on reel 3 for suspense
       setReelStates(prev => [
         prev[0],
@@ -109,12 +120,17 @@ export function useSlotMachine() {
       playWinSound();
     }
 
-    // 9. Update progressive counter
+    // 9. Update progressive counter and handle bonuses
     if (winResult === 'max') {
       // Max prize - reset counter
       resetProgressiveCounter();
+    } else if (winResult === 'small') {
+      // Small win - add 1% bonus to base probability
+      // Auto-spin will be triggered when user dismisses the message
+      addBonusIncrement();
+      incrementProgressiveCounter();
     } else {
-      // Small win or loss - increment counter
+      // No win - increment counter
       incrementProgressiveCounter();
     }
 
@@ -127,9 +143,12 @@ export function useSlotMachine() {
     setWinType,
     incrementProgressiveCounter,
     resetProgressiveCounter,
+    addBonusIncrement,
+    setZeusBonusActive,
     playWinSound,
     playSlowmoSound,
-    playLockSound
+    playLockSound,
+    playPowerSound
   ]);
 
   return {

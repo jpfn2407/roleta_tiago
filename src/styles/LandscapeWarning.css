@@ -1,0 +1,61 @@
+.landscape-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.landscape-warning-content {
+  text-align: center;
+  padding: 2rem;
+  max-width: 80%;
+}
+
+.rotate-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: rotate-animation 2s ease-in-out infinite;
+}
+
+@keyframes rotate-animation {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-15deg);
+  }
+  75% {
+    transform: rotate(15deg);
+  }
+}
+
+.landscape-warning-title {
+  font-size: 2rem;
+  color: #ffd700;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.landscape-warning-message {
+  font-size: 1.2rem;
+  color: #fff;
+  margin: 0;
+  line-height: 1.5;
+}

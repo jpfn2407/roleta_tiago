@@ -53,14 +53,16 @@ export function Reel({ isSpinning, slowMotion, finalResult, reelIndex }) {
   useEffect(() => {
     if (!isSpinning && finalResult !== null && finalResult !== undefined && stripRef.current && imageStrip.length > 0) {
       // Calculate position to center the final result
-      // Reel viewport center is at 200px
-      // Each image is 180px tall, so for image to be centered, its top should be at 200 - 90 = 110px
-      // Formula: stripTop + (targetIndex * imageHeight) + translateY = targetPosition
+      // Detect if mobile (pointer: coarse) for different image dimensions
+      const isMobile = window.matchMedia('(pointer: coarse)').matches;
+
+      // Image height depends on device type
+      const imageHeight = isMobile ? 140 : 180;
+      const viewportCenter = isMobile ? 150 : 200; // Mobile reel is 300px tall, desktop is 400px
+      const stripInitialTop = isMobile ? -2940 : -3760; // Adjust for smaller images on mobile
+
       const targetIndex = 22;
-      const imageHeight = 180;
-      const stripInitialTop = -3760;
-      const viewportCenter = 200;
-      const targetPosition = viewportCenter - (imageHeight / 2); // 200 - 90 = 110px
+      const targetPosition = viewportCenter - (imageHeight / 2);
 
       const finalTranslateY = targetPosition - stripInitialTop - (targetIndex * imageHeight);
 

@@ -34,9 +34,10 @@ export function calculateEffectiveProbability(settings) {
  * Generates the results for all 3 reels based on probability
  *
  * @param {number} maxPrizeProbability - Effective probability of max prize win (0-1)
+ * @param {number} smallWinProbability - Probability of small wins/bonus spins (0-1)
  * @returns {Array<number>} Array of 3 image IDs [reel1, reel2, reel3]
  */
-export function generateReelResults(maxPrizeProbability) {
+export function generateReelResults(maxPrizeProbability, smallWinProbability = 0.05) {
   const shouldWinMaxPrize = Math.random() < maxPrizeProbability;
 
   if (shouldWinMaxPrize) {
@@ -60,8 +61,8 @@ export function generateReelResults(maxPrizeProbability) {
     return [matchImageId, matchImageId, differentImageId];
   }
 
-  // Small chance of other triple matches (small wins) - 5% chance
-  const createSmallWin = Math.random() < 0.05;
+  // Small chance of other triple matches (small wins) - user configurable
+  const createSmallWin = Math.random() < smallWinProbability;
 
   if (createSmallWin) {
     // All three match, but not winner_tiago
