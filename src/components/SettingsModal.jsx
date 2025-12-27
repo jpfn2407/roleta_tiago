@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSlotMachineContext } from '../context/SlotMachineContext.jsx';
-import { PROGRESSIVE_INCREMENT_BOUNDS, SMALL_WIN_PROBABILITY_BOUNDS } from '../utils/constants.js';
+import { PROGRESSIVE_INCREMENT_BOUNDS, SMALL_WIN_PROBABILITY_BOUNDS, DEFAULT_SETTINGS } from '../utils/constants.js';
 import '../styles/SettingsModal.css';
 
 /**
@@ -66,21 +66,15 @@ export function SettingsModal({ isOpen, onClose }) {
   const handleReset = () => {
     // Ask for confirmation
     const confirmed = window.confirm(
-      'Are you sure you want to reset statistics? This will:\n\n' +
-      '- Reset attempts counter to 0\n' +
-      '- Apply current settings\n\n' +
+      'Are you sure you want to reset to defaults? This will:\n\n' +
+      '- Reset all settings to default values\n' +
+      '- Reset attempts counter to 0\n\n' +
       'This action cannot be undone.'
     );
 
     if (confirmed) {
-      // Apply current form values and reset statistics
-      updateSettings({
-        trueWinnerProbability: baseProbability,
-        progressiveMode: progressiveMode,
-        progressiveIncrementRate: incrementRate,
-        smallWinProbability: smallWinProbability,
-        attemptsSinceMaxPrize: 0 // Reset statistics
-      });
+      // Reset everything to default settings
+      updateSettings(DEFAULT_SETTINGS);
       onClose();
     }
   };
@@ -176,10 +170,10 @@ export function SettingsModal({ isOpen, onClose }) {
           </p>
         </div>
 
-        {/* Reset Statistics Button */}
+        {/* Reset to Defaults Button */}
         <div className="settings-reset-container">
           <button onClick={handleReset} className="settings-button-reset">
-            Reset Statistics
+            Reset to Defaults
           </button>
         </div>
 
