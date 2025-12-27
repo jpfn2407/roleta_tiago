@@ -126,6 +126,24 @@
   letter-spacing: 0.05em;
 }
 
+.max-indicator {
+  color: #ff0000;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+  animation: pulse-red 1s ease-in-out infinite;
+}
+
+@keyframes pulse-red {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
 /* Winner display styles */
 .winner-display {
   position: fixed;
@@ -331,5 +349,34 @@
   .settings-hover-zone {
     width: 70px;
     height: 70px;
+  }
+
+  /* Winner display mobile adjustments */
+  .winner-content {
+    padding: 1.5rem;
+    max-width: 85vw;
+  }
+
+  .winner-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .winner-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .winner-message {
+    font-size: 1rem;
+  }
+
+  .winner-click-hint {
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .winner-small .winner-content {
+    padding: 1.5rem;
   }
 }

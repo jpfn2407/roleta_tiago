@@ -9,14 +9,16 @@ import { SLOT_IMAGES, MAX_PROBABILITY } from './constants.js';
  * @param {boolean} settings.progressiveMode - Whether progressive mode is enabled
  * @param {number} settings.progressiveIncrementRate - Increment rate per spin (0-1)
  * @param {number} settings.attemptsSinceMaxPrize - Number of spins since last max prize
- * @returns {number} Effective probability capped at MAX_PROBABILITY
+ * @param {number} settings.maxProbabilityCap - Maximum probability cap (0-1)
+ * @returns {number} Effective probability capped at maxProbabilityCap
  */
 export function calculateEffectiveProbability(settings) {
   const {
     trueWinnerProbability,
     progressiveMode,
     progressiveIncrementRate,
-    attemptsSinceMaxPrize
+    attemptsSinceMaxPrize,
+    maxProbabilityCap
   } = settings;
 
   let effectiveProbability = trueWinnerProbability;
@@ -26,8 +28,9 @@ export function calculateEffectiveProbability(settings) {
     effectiveProbability = trueWinnerProbability + progressiveBonus;
   }
 
-  // Cap at maximum probability
-  return Math.min(effectiveProbability, MAX_PROBABILITY);
+  // Cap at user-defined maximum probability (only applies to jackpot, not small wins)
+  const cap = maxProbabilityCap || MAX_PROBABILITY;
+  return Math.min(effectiveProbability, cap);
 }
 
 /**

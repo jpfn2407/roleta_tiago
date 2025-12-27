@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSlotMachineContext } from '../context/SlotMachineContext.jsx';
-import { PROGRESSIVE_INCREMENT_BOUNDS, SMALL_WIN_PROBABILITY_BOUNDS, DEFAULT_SETTINGS } from '../utils/constants.js';
+import { PROGRESSIVE_INCREMENT_BOUNDS, SMALL_WIN_PROBABILITY_BOUNDS, MAX_PROBABILITY_CAP_BOUNDS, DEFAULT_SETTINGS } from '../utils/constants.js';
 import '../styles/SettingsModal.css';
 
 /**
@@ -18,6 +18,7 @@ export function SettingsModal({ isOpen, onClose }) {
   const [progressiveMode, setProgressiveMode] = useState(settings.progressiveMode);
   const [incrementRate, setIncrementRate] = useState(settings.progressiveIncrementRate);
   const [smallWinProbability, setSmallWinProbability] = useState(settings.smallWinProbability);
+  const [maxProbabilityCap, setMaxProbabilityCap] = useState(settings.maxProbabilityCap);
 
   // Sync with context when settings change externally
   useEffect(() => {
@@ -25,6 +26,7 @@ export function SettingsModal({ isOpen, onClose }) {
     setProgressiveMode(settings.progressiveMode);
     setIncrementRate(settings.progressiveIncrementRate);
     setSmallWinProbability(settings.smallWinProbability);
+    setMaxProbabilityCap(settings.maxProbabilityCap);
   }, [settings]);
 
   // Handle ESC key to close
@@ -49,7 +51,8 @@ export function SettingsModal({ isOpen, onClose }) {
       trueWinnerProbability: baseProbability,
       progressiveMode: progressiveMode,
       progressiveIncrementRate: incrementRate,
-      smallWinProbability: smallWinProbability
+      smallWinProbability: smallWinProbability,
+      maxProbabilityCap: maxProbabilityCap
     });
     onClose();
   };
@@ -60,6 +63,7 @@ export function SettingsModal({ isOpen, onClose }) {
     setProgressiveMode(settings.progressiveMode);
     setIncrementRate(settings.progressiveIncrementRate);
     setSmallWinProbability(settings.smallWinProbability);
+    setMaxProbabilityCap(settings.maxProbabilityCap);
     onClose();
   };
 
@@ -89,13 +93,13 @@ export function SettingsModal({ isOpen, onClose }) {
         {/* Input 1: Base Probability Slider */}
         <div className="settings-group">
           <label className="settings-label">
-            Max Prize Base Probability: {Math.round(baseProbability * 100)}%
+            Max Prize Base Probability: {(baseProbability * 100).toFixed(1)}%
           </label>
           <input
             type="range"
             min="0"
             max="1"
-            step="0.01"
+            step="0.005"
             value={baseProbability}
             onChange={(e) => setBaseProbability(parseFloat(e.target.value))}
             className="settings-slider"
@@ -163,10 +167,33 @@ export function SettingsModal({ isOpen, onClose }) {
           />
           <div className="settings-range-labels">
             <span>0%</span>
-            <span>20%</span>
+            <span>50%</span>
           </div>
           <p className="settings-description">
-            Chance of triple-match bonus spins (grants +1% jackpot probability and auto-spin)
+            Chance of triple-match bonus spins (grants +0.5% jackpot probability and auto-spin)
+          </p>
+        </div>
+
+        {/* Input 5: Max Jackpot Probability Cap */}
+        <div className="settings-group">
+          <label className="settings-label">
+            Max Jackpot Probability Cap: {(maxProbabilityCap * 100).toFixed(1)}%
+          </label>
+          <input
+            type="range"
+            min={MAX_PROBABILITY_CAP_BOUNDS.MIN}
+            max={MAX_PROBABILITY_CAP_BOUNDS.MAX}
+            step="0.01"
+            value={maxProbabilityCap}
+            onChange={(e) => setMaxProbabilityCap(parseFloat(e.target.value))}
+            className="settings-slider"
+          />
+          <div className="settings-range-labels">
+            <span>1%</span>
+            <span>95%</span>
+          </div>
+          <p className="settings-description">
+            Maximum jackpot probability when using progressive mode (does not affect bonus spins)
           </p>
         </div>
 

@@ -53,15 +53,16 @@ export const ANIMATION_SPEEDS = {
 
 // Default game settings
 export const DEFAULT_SETTINGS = {
-  trueWinnerProbability: 0.01,     // 2% base probability for max prize
+  trueWinnerProbability: 0.005,    // 0.5% base probability for max prize
   progressiveMode: true,            // Progressive mode ON by default
   progressiveIncrementRate: 0.005,   // 0.5% increment per spin
-  smallWinProbability: 0.15,        // 15% probability for small wins (bonus spins)
+  smallWinProbability: 0.2,        // 20% probability for small wins (bonus spins)
+  maxProbabilityCap: 0.1,          // 10% maximum jackpot probability cap
   attemptsSinceMaxPrize: 0         // Counter starts at 0
 };
 
 // Bonus increment when small win occurs
-export const BONUS_INCREMENT = 0.01; // 1% added to base probability on small wins
+export const BONUS_INCREMENT = 0.005; // 0.5% added to base probability on small wins
 
 // localStorage key for persisting settings
 export const STORAGE_KEY = 'slotMachineSettings';
@@ -78,9 +79,14 @@ export const PROGRESSIVE_INCREMENT_BOUNDS = {
 // Small win probability bounds (for slider)
 export const SMALL_WIN_PROBABILITY_BOUNDS = {
   MIN: 0,      // 0%
-  MAX: 0.2     // 20%
+  MAX: 0.5     // 50%
 };
 
+// Max probability cap bounds (for slider)
+export const MAX_PROBABILITY_CAP_BOUNDS = {
+  MIN: 0.01,   // 1%
+  MAX: 0.95    // 95%
+};
 
 // Additional images for visual enhancements
 export const IMAGES = {

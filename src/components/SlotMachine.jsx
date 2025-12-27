@@ -23,6 +23,9 @@ export function SlotMachine() {
   const effectiveProbability = calculateEffectiveProbability(settings);
   const probabilityPercentage = (effectiveProbability * 100).toFixed(2);
 
+  // Check if we've hit the max cap (within small tolerance for floating point)
+  const isAtMaxCap = Math.abs(effectiveProbability - settings.maxProbabilityCap) < 0.0001;
+
   const handleOpenSettings = () => {
     setShowSettings(true);
   };
@@ -88,6 +91,7 @@ export function SlotMachine() {
       {/* Probability display */}
       <div className="probability-display">
         Jackpot Probability: {probabilityPercentage}%
+        {isAtMaxCap && <span className="max-indicator"> MAX!!!</span>}
       </div>
 
       {/* Winner display */}
